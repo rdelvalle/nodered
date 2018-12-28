@@ -1,0 +1,167 @@
+[
+    {
+        "id": "59273eda.88f83",
+        "type": "tab",
+        "label": "ISICOPIER"
+    },
+    {
+        "id": "572de24c.338f3c",
+        "type": "inject",
+        "z": "59273eda.88f83",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "60",
+        "crontab": "",
+        "once": false,
+        "x": 111,
+        "y": 32.75,
+        "wires": [
+            [
+                "c744f36c.d09c3"
+            ]
+        ]
+    },
+    {
+        "id": "94d670d1.5b26b",
+        "type": "debug",
+        "z": "59273eda.88f83",
+        "name": "",
+        "active": false,
+        "console": "false",
+        "complete": "payload",
+        "x": 751.5,
+        "y": 345,
+        "wires": []
+    },
+    {
+        "id": "b7dae7c.d26e918",
+        "type": "http response",
+        "z": "59273eda.88f83",
+        "name": "Received",
+        "x": 438.5,
+        "y": 611,
+        "wires": []
+    },
+    {
+        "id": "aff23174.bef9c",
+        "type": "debug",
+        "z": "59273eda.88f83",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "payload",
+        "x": 485.5,
+        "y": 552,
+        "wires": []
+    },
+    {
+        "id": "fd5c1326.27743",
+        "type": "debug",
+        "z": "59273eda.88f83",
+        "name": "",
+        "active": false,
+        "console": "false",
+        "complete": "false",
+        "x": 234.5,
+        "y": 316,
+        "wires": []
+    },
+    {
+        "id": "dce612e0.73b9d",
+        "type": "http in",
+        "z": "59273eda.88f83",
+        "name": "Kiosk Status",
+        "url": "/kioskstatus",
+        "method": "post",
+        "swaggerDoc": "",
+        "x": 256.5,
+        "y": 553,
+        "wires": [
+            [
+                "b7dae7c.d26e918",
+                "aff23174.bef9c"
+            ]
+        ]
+    },
+    {
+        "id": "c744f36c.d09c3",
+        "type": "function",
+        "z": "59273eda.88f83",
+        "name": "",
+        "func": "node.send({\"url\": \"http://printfor.me/status.json?source=ISICOPIER1\"})\nnode.send({\"url\": \"http://printfor.me/status.json?source=ISICOPIER2\"})\nnode.send({\"url\": \"http://printfor.me/status.json?source=ISICOPIER3\"})\nnode.send({\"url\": \"http://printfor.me/status.json?source=ISICOPIER4\"})\nnode.send({\"url\": \"http://printfor.me/status.json?source=ISICOPIER5\"})\nnode.send({\"url\": \"http://printfor.me/status.json?source=ISICOPIER6\"})\nnode.send({\"url\": \"http://printfor.me/status.json?source=ISICOPIER7\"})\nnode.send({\"url\": \"http://printfor.me/status.json?source=ISICOPIER8\"})\nnode.send({\"url\": \"http://printfor.me/status.json?source=ISICOPIER9\"})\nnode.send({\"url\": \"http://printfor.me/status.json?source=SFE1\"})\nnode.send({\"url\": \"http://printfor.me/status.json?source=SFE2\"})\nnode.send({\"url\": \"http://printfor.me/status.json?source=SFE3\"})\nnode.send({\"url\": \"http://printfor.me/status.json?source=SFE4\"})\nnode.send({\"url\": \"http://printfor.me/status.json?source=SFIDMA1\"})\nnode.send({\"url\": \"http://printfor.me/status.json?source=SFIDMA2\"})\nnode.send({\"url\": \"http://printfor.me/status.json?source=SFIDMA3\"})",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 84.5,
+        "y": 141,
+        "wires": [
+            [
+                "b68b0c81.942c1"
+            ]
+        ]
+    },
+    {
+        "id": "e290ec21.fca7",
+        "type": "http request",
+        "z": "59273eda.88f83",
+        "name": "",
+        "method": "POST",
+        "ret": "txt",
+        "url": "",
+        "tls": "",
+        "x": 504,
+        "y": 378,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d39e292a.a4d488",
+        "type": "function",
+        "z": "59273eda.88f83",
+        "name": "",
+        "func": "var statusbool = 1;\nif (msg.payload.status == \"Error\" || msg.payload.status == \"Critical Error\" || msg.payload.status == \"No Printer\") {\nstatusbool = 0;\n}\nmsg.url =\"http://tools.printfor.me:8086/write?db=pfm\";\nmsg.payload = \"totems,source=\" +msg.payload.source + \" caras=\" + msg.payload.caras + \",status=\" + statusbool+ \",percentage=\" +msg.payload.porcentaje+ \",is_online=\" + msg.payload.is_online;\nreturn msg\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 521,
+        "y": 308,
+        "wires": [
+            [
+                "e290ec21.fca7",
+                "94d670d1.5b26b"
+            ]
+        ]
+    },
+    {
+        "id": "bf958e41.623a3",
+        "type": "json",
+        "z": "59273eda.88f83",
+        "name": "parse json",
+        "x": 509.125,
+        "y": 227.25,
+        "wires": [
+            [
+                "d39e292a.a4d488"
+            ]
+        ]
+    },
+    {
+        "id": "b68b0c81.942c1",
+        "type": "http request",
+        "z": "59273eda.88f83",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "url": "",
+        "tls": "",
+        "x": 285,
+        "y": 81,
+        "wires": [
+            [
+                "fd5c1326.27743",
+                "bf958e41.623a3"
+            ]
+        ]
+    }
+]
